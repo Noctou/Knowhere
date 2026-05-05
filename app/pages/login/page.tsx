@@ -27,12 +27,12 @@ export default function LoginPage() {
       return;
     }
 
-    const isStudentEmail = username.endsWith("@student.fatima.edu");
-    const isFacultyEmail = username.endsWith("@fatima.edu");
+    const isStudentEmail = username.endsWith("@student.fatima.edu.ph");
+    const isFacultyEmail = username.endsWith("@fatima.edu.ph");
 
     if (!isStudentEmail && !isFacultyEmail) {
       setLoginError(
-        "Use @student.fatima.edu for students or @fatima.edu for faculty.",
+        "Use @student.fatima.edu.ph for students or @fatima.edu.ph for faculty.",
       );
       return;
     }
@@ -72,7 +72,7 @@ export default function LoginPage() {
               autoComplete="username"
               required
               className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-400/10"
-              placeholder="you@student.fatima.edu, you@fatima.edu, or admin"
+              placeholder="you@student.fatima.edu.ph, you@fatima.edu.ph, or admin"
             />
             {loginError ? (
               <p className="mt-2 text-sm text-red-600">{loginError}</p>
