@@ -10,7 +10,7 @@ import {
 } from "@/app/lib/item-storage";
 
 type RecoverItemClientProps = {
-  role: "student" | "admin";
+  role: "student" | "faculty" | "admin";
   userName?: string;
 };
 

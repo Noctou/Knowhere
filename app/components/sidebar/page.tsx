@@ -4,13 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type SidebarProps = {
-  role?: "student" | "admin";
+  role?: "student" | "faculty" | "admin";
   userName?: string;
 };
 
 export default function Sidebar({ role = "student", userName }: SidebarProps) {
   const pathname = usePathname();
-  const displayName = role === "admin" ? "Manager" : userName || "Student";
+  const displayName =
+    role === "admin"
+      ? "Manager"
+      : userName || (role === "faculty" ? "Faculty" : "Student");
   const userQuery = userName ? `&user=${encodeURIComponent(userName)}` : "";
   const roleQuery = `?role=${role}${userQuery}`;
   const navigationLinks = [

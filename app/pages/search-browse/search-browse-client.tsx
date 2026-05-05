@@ -7,7 +7,7 @@ import { Item, sampleItems } from "@/app/lib/items";
 import { loadStoredItems } from "@/app/lib/item-storage";
 
 type SearchBrowseClientProps = {
-  role: "student" | "admin";
+  role: "student" | "faculty" | "admin";
   userName?: string;
 };
 

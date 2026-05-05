@@ -1,13 +1,13 @@
 import RecoverItemClient from "./recover-item-client";
 
-type Role = "student" | "admin";
+type Role = "student" | "faculty" | "admin";
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 function getRole(value: string | string[] | undefined): Role {
-  return value === "admin" ? "admin" : "student";
+  return value === "admin" || value === "faculty" ? value : "student";
 }
 
 export default async function RecoverItemPage({ searchParams }: PageProps) {

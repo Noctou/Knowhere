@@ -5,7 +5,7 @@ import { FormEvent } from "react";
 import { addStoredItem } from "@/app/lib/item-storage";
 
 type ReportFoundFormProps = {
-  role: "student" | "admin";
+  role: "student" | "faculty" | "admin";
   userName?: string;
 };
 

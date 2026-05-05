@@ -10,7 +10,7 @@ import {
 } from "@/app/lib/item-storage";
 
 type RecoveredItemsClientProps = {
-  role: "student" | "admin";
+  role: "student" | "faculty" | "admin";
   userName?: string;
 };
 
@@ -37,7 +37,7 @@ export default function RecoveredItemsClient({
   if (role !== "admin") {
     return (
       <main className="flex min-h-screen bg-gray-100">
-        <Sidebar role="student" userName={userName} />
+        <Sidebar role={role} userName={userName} />
         <section className="flex-1 p-6">
           <div className="rounded-lg bg-white p-6 shadow-sm">
             <h1 className="text-2xl font-semibold text-gray-900">
