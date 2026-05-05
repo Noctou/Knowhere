@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import RecoverItemClient from "./recover-item-client";
 
 type Role = "student" | "faculty" | "admin";
@@ -12,7 +13,12 @@ function getRole(value: string | string[] | undefined): Role {
 
 export default async function RecoverItemPage({ searchParams }: PageProps) {
   const params = await searchParams;
+  const role = getRole(params.role);
   const userName = typeof params.user === "string" ? params.user : undefined;
 
-  return <RecoverItemClient role={getRole(params.role)} userName={userName} />;
+  if (role === "admin") {
+    redirect(`/pages/search-browse?role=admin${userName ? `&user=${encodeURIComponent(userName)}` : ""}`);
+  }
+
+  return <RecoverItemClient role={role} userName={userName} />;
 }

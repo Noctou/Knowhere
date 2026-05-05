@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import Sidebar from "@/app/components/sidebar/page";
 import ReportLostForm from "./report-lost-form";
 
@@ -15,6 +16,10 @@ export default async function ReportLostItem({ searchParams }: PageProps) {
   const params = await searchParams;
   const role = getRole(params.role);
   const userName = typeof params.user === "string" ? params.user : undefined;
+
+  if (role === "admin") {
+    redirect(`/pages/search-browse?role=admin${userName ? `&user=${encodeURIComponent(userName)}` : ""}`);
+  }
 
   return (
     <main className="flex min-h-screen bg-gray-100">

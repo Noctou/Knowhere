@@ -18,9 +18,13 @@ export default function Sidebar({ role = "student", userName }: SidebarProps) {
   const roleQuery = `?role=${role}${userQuery}`;
   const navigationLinks = [
     { href: `/pages/search-browse${roleQuery}`, label: "Search & Browse" },
-    { href: `/pages/report-lost${roleQuery}`, label: "Report Lost" },
-    { href: `/pages/report-found${roleQuery}`, label: "Report Found" },
-    { href: `/pages/recover-item${roleQuery}`, label: "Recover Item" },
+    ...(role === "admin"
+      ? []
+      : [
+          { href: `/pages/report-lost${roleQuery}`, label: "Report Lost" },
+          { href: `/pages/report-found${roleQuery}`, label: "Report Found" },
+          { href: `/pages/recover-item${roleQuery}`, label: "Recover Item" },
+        ]),
     ...(role === "admin"
       ? [
           { href: `/pages/manage-posts${roleQuery}`, label: "Manage Posts" },

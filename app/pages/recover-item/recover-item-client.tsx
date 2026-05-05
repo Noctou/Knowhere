@@ -1,6 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
 import { useState } from "react";
+import ItemSearchFilter from "@/app/components/search-bar/item-search-filter";
 import Sidebar from "@/app/components/sidebar/page";
 import { Item, sampleItems } from "@/app/lib/items";
 import {
@@ -24,7 +26,31 @@ export default function RecoverItemClient({
       ? sampleItems
       : [...sampleItems, ...loadStoredItems()],
   );
-  const foundItems = items.filter((item) => item.status === "Found");
+  const foundItems = useMemo(
+    () => items.filter((item) => item.status === "Found"),
+    [items],
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(foundItems.map((item) => item.category).filter(Boolean)),
+      ).sort((first, second) => first.localeCompare(second)),
+    [foundItems],
+  );
+  const filteredItems = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return foundItems.filter((item) => {
+      const matchesName =
+        !normalizedSearch || item.title.toLowerCase().includes(normalizedSearch);
+      const matchesCategory =
+        selectedCategory === "All" || item.category === selectedCategory;
+
+      return matchesName && matchesCategory;
+    });
+  }, [foundItems, searchTerm, selectedCategory]);
   const [requestedItemIds, setRequestedItemIds] = useState<number[]>(() =>
     typeof window === "undefined"
       ? []
@@ -65,13 +91,25 @@ export default function RecoverItemClient({
           </p>
         </div>
 
+        <ItemSearchFilter
+          categories={categories}
+          searchTerm={searchTerm}
+          selectedCategory={selectedCategory}
+          onSearchTermChange={setSearchTerm}
+          onSelectedCategoryChange={setSelectedCategory}
+        />
+
         {foundItems.length === 0 ? (
           <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
             No found items are available for recovery requests.
           </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
+            No items match your search.
+          </div>
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
-            {foundItems.map((item) => {
+            {filteredItems.map((item) => {
             const isRequested = requestedItemIds.includes(item.id);
 
             return (

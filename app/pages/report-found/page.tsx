@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import Sidebar from "@/app/components/sidebar/page";
 import ReportFoundForm from "./report-found-form";
 
@@ -15,6 +16,10 @@ export default async function ReportFoundItem({ searchParams }: PageProps) {
   const params = await searchParams;
   const role = getRole(params.role);
   const userName = typeof params.user === "string" ? params.user : undefined;
+
+  if (role === "admin") {
+    redirect(`/pages/search-browse?role=admin${userName ? `&user=${encodeURIComponent(userName)}` : ""}`);
+  }
 
   return (
     <main className="flex min-h-screen bg-gray-100">
