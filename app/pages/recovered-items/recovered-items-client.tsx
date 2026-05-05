@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { useState } from "react";
+import ItemSearchFilter from "@/app/components/search-bar/item-search-filter";
 import Sidebar from "@/app/components/sidebar/page";
 import {
   loadRecoveryRequests,
@@ -21,6 +23,28 @@ export default function RecoveredItemsClient({
   const [requests, setRequests] = useState<RecoveryRequest[]>(() =>
     typeof window === "undefined" ? [] : loadRecoveryRequests(),
   );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(requests.map((request) => request.category).filter(Boolean)),
+      ).sort((first, second) => first.localeCompare(second)),
+    [requests],
+  );
+  const filteredRequests = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return requests.filter((request) => {
+      const matchesName =
+        !normalizedSearch ||
+        request.title.toLowerCase().includes(normalizedSearch);
+      const matchesCategory =
+        selectedCategory === "All" || request.category === selectedCategory;
+
+      return matchesName && matchesCategory;
+    });
+  }, [requests, searchTerm, selectedCategory]);
 
   function approveRequest(id: string) {
     setRequests((currentRequests) => {
@@ -72,13 +96,25 @@ export default function RecoveredItemsClient({
           </p>
         </div>
 
+        <ItemSearchFilter
+          categories={categories}
+          searchTerm={searchTerm}
+          selectedCategory={selectedCategory}
+          onSearchTermChange={setSearchTerm}
+          onSelectedCategoryChange={setSelectedCategory}
+        />
+
         {requests.length === 0 ? (
           <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
             No recovery requests yet.
           </div>
+        ) : filteredRequests.length === 0 ? (
+          <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
+            No items match your search.
+          </div>
         ) : (
           <div className="space-y-4">
-            {requests.map((request) => (
+            {filteredRequests.map((request) => (
               <article
                 key={request.id}
                 className="rounded-lg bg-white p-5 shadow-sm"
