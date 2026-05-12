@@ -63,7 +63,7 @@ export default function RecoveredItemsClient({
       <main className="flex min-h-screen bg-gray-100">
         <Sidebar role={role} userName={userName} />
         <section className="flex-1 p-6">
-          <div className="rounded-lg bg-white p-6 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-6 shadow-sm">
             <h1 className="text-2xl font-semibold text-gray-900">
               Manager Access Required
             </h1>
@@ -105,19 +105,20 @@ export default function RecoveredItemsClient({
         />
 
         {requests.length === 0 ? (
-          <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
             No recovery requests yet.
           </div>
         ) : filteredRequests.length === 0 ? (
-          <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
             No items match your search.
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredRequests.map((request) => (
+            {filteredRequests.map((request, index) => (
               <article
                 key={request.id}
-                className="rounded-lg bg-white p-5 shadow-sm"
+                className="content-wrapper-fade rounded-lg bg-white p-5 shadow-sm"
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>

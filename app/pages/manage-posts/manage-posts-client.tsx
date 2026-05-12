@@ -53,7 +53,7 @@ export default function ManagePostsClient({
       <main className="flex min-h-screen bg-gray-100">
         <Sidebar role={role} userName={userName} />
         <section className="flex-1 p-6">
-          <div className="rounded-lg bg-white p-6 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-6 shadow-sm">
             <h1 className="text-2xl font-semibold text-gray-900">
               Manager Access Required
             </h1>
@@ -86,8 +86,12 @@ export default function ManagePostsClient({
         </div>
 
         <div className="space-y-4">
-          {openItems.map((item) => (
-            <article key={item.id} className="rounded-lg bg-white p-5 shadow-sm">
+          {openItems.map((item, index) => (
+            <article
+              key={item.id}
+              className="content-wrapper-fade rounded-lg bg-white p-5 shadow-sm"
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">

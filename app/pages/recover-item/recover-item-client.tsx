@@ -100,49 +100,50 @@ export default function RecoverItemClient({
         />
 
         {foundItems.length === 0 ? (
-          <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
             No found items are available for recovery requests.
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-6 text-sm text-gray-600 shadow-sm">
             No items match your search.
           </div>
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
-            {filteredItems.map((item) => {
-            const isRequested = requestedItemIds.includes(item.id);
+            {filteredItems.map((item, index) => {
+              const isRequested = requestedItemIds.includes(item.id);
 
-            return (
-              <article
-                key={item.id}
-                className="rounded-lg bg-white p-5 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      {item.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-gray-600">
-                      {item.category} - {item.location}
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                    {item.status}
-                  </span>
-                </div>
-                <p className="mt-4 text-sm text-gray-700">
-                  {item.description}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => requestRecovery(item)}
-                  disabled={isRequested}
-                  className="mt-5 inline-flex rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+              return (
+                <article
+                  key={item.id}
+                  className="content-wrapper-fade rounded-lg bg-white p-5 shadow-sm"
+                  style={{ animationDelay: `${index * 60}ms` }}
                 >
-                  {isRequested ? "Recovery requested" : "Request recovery"}
-                </button>
-              </article>
-            );
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        {item.title}
+                      </h2>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {item.category} - {item.location}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                      {item.status}
+                    </span>
+                  </div>
+                  <p className="mt-4 text-sm text-gray-700">
+                    {item.description}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => requestRecovery(item)}
+                    disabled={isRequested}
+                    className="mt-5 inline-flex rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+                  >
+                    {isRequested ? "Recovery requested" : "Request recovery"}
+                  </button>
+                </article>
+              );
             })}
           </div>
         )}

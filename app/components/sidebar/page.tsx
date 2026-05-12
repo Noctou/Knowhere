@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 type SidebarProps = {
@@ -39,6 +40,14 @@ export default function Sidebar({ role = "student", userName }: SidebarProps) {
   return (
     <aside className="flex h-screen w-64 flex-col bg-green-700 px-4 py-6 text-white">
       <div className="mb-8">
+        <Image
+          src="/logo.png"
+          alt="Our Lady of Fatima University"
+          width={232}
+          height={35}
+          priority
+          className="mx-auto mb-6 h-auto w-full max-w-[200px]"
+        />
         <h1 className="text-2xl font-semibold tracking-wide">Knowhere</h1>
         <p className="mt-1 text-sm text-green-50/80">
           Lost and found portal

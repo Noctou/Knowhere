@@ -36,7 +36,7 @@ export default function ReportLostForm({ role, userName }: ReportLostFormProps) 
   return (
     <form
       onSubmit={submitItem}
-      className="max-w-2xl space-y-5 rounded-lg bg-white p-6 shadow-sm"
+      className="mx-auto max-w-2xl space-y-5 rounded-lg bg-white p-6 shadow-sm"
     >
       <div>
         <label className="block text-sm font-medium text-gray-700">

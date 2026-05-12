@@ -89,8 +89,12 @@ export default function SearchBrowseClient({
         />
 
         <div className="grid gap-4 lg:grid-cols-2">
-          {filteredItems.map((item) => (
-            <article key={item.id} className="rounded-lg bg-white p-5 shadow-sm">
+          {filteredItems.map((item, index) => (
+            <article
+              key={item.id}
+              className="content-wrapper-fade rounded-lg bg-white p-5 shadow-sm"
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
@@ -113,7 +117,7 @@ export default function SearchBrowseClient({
           ))}
         </div>
         {filteredItems.length === 0 ? (
-          <div className="rounded-lg bg-white p-8 text-center text-sm text-gray-600 shadow-sm">
+          <div className="content-wrapper-fade rounded-lg bg-white p-8 text-center text-sm text-gray-600 shadow-sm">
             No items match your search.
           </div>
         ) : null}
