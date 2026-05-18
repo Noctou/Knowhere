@@ -125,7 +125,7 @@ export default function SearchBrowseClient({
                 <img
                   src={item.imageUrl}
                   alt={item.title}
-                  className="mt-4 h-44 w-full rounded-md object-cover"
+                  className="mt-4 h-44 w-full rounded-md bg-gray-100 object-contain"
                 />
               ) : null}
               <p className="mt-4 text-sm text-gray-700">{item.description}</p>

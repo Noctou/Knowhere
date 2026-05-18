@@ -120,7 +120,7 @@ export default function ManagePostsClient({
                 <img
                   src={item.imageUrl}
                   alt={item.title}
-                  className="mt-4 h-44 w-full rounded-md object-cover"
+                  className="mt-4 h-44 w-full rounded-md bg-gray-100 object-contain"
                 />
               ) : null}
 

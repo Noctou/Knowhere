@@ -172,7 +172,7 @@ export default function ReportFoundForm({ role, userName }: ReportFoundFormProps
           <img
             src={imageUrl}
             alt="Selected found item"
-            className="mt-3 h-40 w-full rounded-md object-cover"
+            className="mt-3 h-40 w-full rounded-md bg-gray-100 object-contain"
           />
         ) : null}
       </div>

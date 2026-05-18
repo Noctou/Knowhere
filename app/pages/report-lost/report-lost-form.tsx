@@ -172,7 +172,7 @@ export default function ReportLostForm({ role, userName }: ReportLostFormProps) 
           <img
             src={imageUrl}
             alt="Selected lost item"
-            className="mt-3 h-40 w-full rounded-md object-cover"
+            className="mt-3 h-40 w-full rounded-md bg-gray-100 object-contain"
           />
         ) : null}
       </div>
