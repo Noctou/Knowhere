@@ -11,6 +11,7 @@ export type Item = {
   description: string;
   contactEmail?: string;
   isContactPrivate?: boolean;
+  imageUrl?: string;
 };
 
 export const sampleItems: Item[] = [
@@ -28,7 +29,7 @@ export const sampleItems: Item[] = [
     id: 2,
     title: "Black Wireless Mouse",
     category: "Electronics",
-    location: "Computer lab 3",
+    location: "Computer lab 2",
     date: "2026-05-04",
     status: "Found",
     postedBy: "Student",

@@ -137,6 +137,14 @@ export default function RecoverItemClient({
                     </div>
                     <StatusBadge status={item.status} />
                   </div>
+                  {item.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="mt-4 h-44 w-full rounded-md object-cover"
+                    />
+                  ) : null}
                   <p className="mt-4 text-sm text-gray-700">
                     {item.description}
                   </p>

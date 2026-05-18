@@ -7,6 +7,7 @@ import FoundItemExpiration from "@/app/components/found-item-expiration";
 import ItemSearchFilter from "@/app/components/search-bar/item-search-filter";
 import Sidebar from "@/app/components/sidebar/page";
 import StatusBadge from "@/app/components/status-badge";
+import { itemCategories } from "@/app/lib/form-options";
 import { Item, sampleItems } from "@/app/lib/items";
 import {
   getActiveItems,
@@ -37,9 +38,12 @@ export default function SearchBrowseClient({
   const [selectedCategory, setSelectedCategory] = useState("All");
   const categories = useMemo(
     () =>
-      Array.from(new Set(items.map((item) => item.category).filter(Boolean))).sort(
-        (first, second) => first.localeCompare(second),
-      ),
+      Array.from(
+        new Set([
+          ...itemCategories,
+          ...items.map((item) => item.category).filter(Boolean),
+        ]),
+      ).sort((first, second) => first.localeCompare(second)),
     [items],
   );
   const filteredItems = useMemo(() => {
@@ -116,6 +120,14 @@ export default function SearchBrowseClient({
                 </div>
                 <StatusBadge status={item.status} />
               </div>
+              {item.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="mt-4 h-44 w-full rounded-md object-cover"
+                />
+              ) : null}
               <p className="mt-4 text-sm text-gray-700">{item.description}</p>
               <FoundItemExpiration
                 item={item}

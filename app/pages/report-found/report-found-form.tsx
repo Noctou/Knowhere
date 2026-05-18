@@ -18,6 +18,7 @@ export default function ReportFoundForm({ role, userName }: ReportFoundFormProps
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isContactPrivate, setIsContactPrivate] = useState(true);
+  const [imageUrl, setImageUrl] = useState("");
   const uploadTimerRef = useRef<number | null>(null);
 
   function uploadPhoto(event: ChangeEvent<HTMLInputElement>) {
@@ -25,11 +26,18 @@ export default function ReportFoundForm({ role, userName }: ReportFoundFormProps
       window.clearInterval(uploadTimerRef.current);
     }
 
-    if (!event.target.files?.length) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
       setUploadProgress(0);
       setIsUploading(false);
+      setImageUrl("");
       return;
     }
+
+    const reader = new FileReader();
+    reader.onload = () => setImageUrl(String(reader.result || ""));
+    reader.readAsDataURL(file);
 
     setUploadProgress(0);
     setIsUploading(true);
@@ -67,6 +75,7 @@ export default function ReportFoundForm({ role, userName }: ReportFoundFormProps
       description: String(form.get("description") || "No description provided."),
       contactEmail: String(form.get("contactEmail") || ""),
       isContactPrivate,
+      imageUrl,
     });
 
     setShowSuccess(true);
@@ -157,6 +166,14 @@ export default function ReportFoundForm({ role, userName }: ReportFoundFormProps
               />
             </div>
           </div>
+        ) : null}
+        {imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageUrl}
+            alt="Selected found item"
+            className="mt-3 h-40 w-full rounded-md object-cover"
+          />
         ) : null}
       </div>
       <div>
