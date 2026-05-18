@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import MenuIcon from "@/app/components/menu-icon";
 
 type SidebarProps = {
   role?: "student" | "faculty" | "admin";
@@ -11,6 +13,8 @@ type SidebarProps = {
 
 export default function Sidebar({ role = "student", userName }: SidebarProps) {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const inactivityTimerRef = useRef<number | null>(null);
   const displayName =
     role === "admin"
       ? "Manager"
@@ -37,9 +41,65 @@ export default function Sidebar({ role = "student", userName }: SidebarProps) {
       : []),
   ];
 
+  const resetInactivityTimer = useCallback(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    if (inactivityTimerRef.current) {
+      window.clearTimeout(inactivityTimerRef.current);
+    }
+
+    inactivityTimerRef.current = window.setTimeout(() => {
+      setIsOpen(false);
+    }, 8000);
+  }, [isOpen]);
+
+  useEffect(() => {
+    resetInactivityTimer();
+
+    return () => {
+      if (inactivityTimerRef.current) {
+        window.clearTimeout(inactivityTimerRef.current);
+      }
+    };
+  }, [resetInactivityTimer]);
+
   return (
-    <aside className="flex min-h-screen w-64 shrink-0 flex-col self-stretch bg-green-700 px-4 py-6 text-white">
-      <div className="mb-8">
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen((current) => !current)}
+        aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={isOpen}
+        aria-controls="app-sidebar"
+        className={`fixed left-5 top-5 z-50 flex h-10 w-10 items-center justify-center rounded-md bg-green-700 text-white shadow-lg transition-opacity md:hidden ${
+          isOpen ? "pointer-events-none opacity-0" : "opacity-100"
+        }`}
+      >
+        <MenuIcon />
+      </button>
+
+      {isOpen ? (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-30 bg-black/30 md:hidden"
+        />
+      ) : null}
+
+      <aside
+        id="app-sidebar"
+        onClick={resetInactivityTimer}
+        onFocus={resetInactivityTimer}
+        onMouseMove={resetInactivityTimer}
+        onTouchStart={resetInactivityTimer}
+        className={`fixed inset-y-0 left-0 z-40 flex min-h-screen w-64 shrink-0 flex-col bg-green-700 px-4 py-6 text-white shadow-xl transition-transform duration-200 md:static md:z-auto md:self-stretch md:translate-x-0 md:shadow-none ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="mb-8">
         <Image
           src="/logo.png"
           alt="Our Lady of Fatima University"
@@ -62,6 +122,7 @@ export default function Sidebar({ role = "student", userName }: SidebarProps) {
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => setIsOpen(false)}
               aria-current={isActive ? "page" : undefined}
               className={`block rounded-md px-3 py-2 text-sm font-medium transition ${
                 isActive
@@ -94,6 +155,7 @@ export default function Sidebar({ role = "student", userName }: SidebarProps) {
           Sign out
         </Link>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

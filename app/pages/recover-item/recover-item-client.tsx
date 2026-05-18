@@ -88,7 +88,7 @@ export default function RecoverItemClient({
     <main className="flex min-h-screen bg-gray-100">
       <Sidebar role={role} userName={userName} />
 
-      <section className="flex-1 p-6">
+      <section className="flex-1 p-6 pt-20 md:pt-6">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">
             Recover Item

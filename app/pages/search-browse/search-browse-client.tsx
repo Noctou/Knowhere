@@ -63,7 +63,7 @@ export default function SearchBrowseClient({
     <main className="flex min-h-screen bg-gray-100">
       <Sidebar role={role} userName={userName} />
 
-      <section className="flex-1 p-6">
+      <section className="flex-1 p-6 pt-20 md:pt-6">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">
