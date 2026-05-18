@@ -9,6 +9,8 @@ export type Item = {
   status: ItemStatus;
   postedBy: string;
   description: string;
+  contactEmail?: string;
+  isContactPrivate?: boolean;
 };
 
 export const sampleItems: Item[] = [

@@ -2,13 +2,17 @@
 
 import { useMemo } from "react";
 import { useState } from "react";
+import FoundItemExpiration from "@/app/components/found-item-expiration";
 import ItemSearchFilter from "@/app/components/search-bar/item-search-filter";
 import Sidebar from "@/app/components/sidebar/page";
+import StatusBadge from "@/app/components/status-badge";
 import { Item, sampleItems } from "@/app/lib/items";
 import {
   addRecoveryRequest,
+  getActiveItems,
   loadRecoveryRequests,
   loadStoredItems,
+  RecoveryRequest,
 } from "@/app/lib/item-storage";
 
 type RecoverItemClientProps = {
@@ -21,10 +25,13 @@ export default function RecoverItemClient({
   userName,
 }: RecoverItemClientProps) {
   const requester = role === "admin" ? "Manager" : userName || "Student";
+  const [recoveryRequests, setRecoveryRequests] = useState<RecoveryRequest[]>(
+    () => (typeof window === "undefined" ? [] : loadRecoveryRequests()),
+  );
   const [items] = useState<Item[]>(() =>
     typeof window === "undefined"
       ? sampleItems
-      : [...sampleItems, ...loadStoredItems()],
+      : getActiveItems([...sampleItems, ...loadStoredItems()], recoveryRequests),
   );
   const foundItems = useMemo(
     () => items.filter((item) => item.status === "Found"),
@@ -54,7 +61,7 @@ export default function RecoverItemClient({
   const [requestedItemIds, setRequestedItemIds] = useState<number[]>(() =>
     typeof window === "undefined"
       ? []
-      : loadRecoveryRequests()
+      : recoveryRequests
           .filter((request) => request.requestedBy === requester)
           .map((request) => request.itemId),
   );
@@ -70,6 +77,7 @@ export default function RecoverItemClient({
       requestedAt: "Submitted",
       status: "Pending",
     });
+    setRecoveryRequests(loadRecoveryRequests());
 
     setRequestedItemIds((currentIds) =>
       currentIds.includes(item.id) ? currentIds : [...currentIds, item.id],
@@ -127,13 +135,15 @@ export default function RecoverItemClient({
                         {item.category} - {item.location}
                       </p>
                     </div>
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                      {item.status}
-                    </span>
+                    <StatusBadge status={item.status} />
                   </div>
                   <p className="mt-4 text-sm text-gray-700">
                     {item.description}
                   </p>
+                  <FoundItemExpiration
+                    item={item}
+                    recoveryRequests={recoveryRequests}
+                  />
                   <button
                     type="button"
                     onClick={() => requestRecovery(item)}

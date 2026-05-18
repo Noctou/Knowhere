@@ -2,9 +2,17 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import FoundItemExpiration from "@/app/components/found-item-expiration";
 import Sidebar from "@/app/components/sidebar/page";
+import StatusBadge from "@/app/components/status-badge";
 import { Item, sampleItems } from "@/app/lib/items";
-import { loadStoredItems, saveStoredItems } from "@/app/lib/item-storage";
+import {
+  getActiveItems,
+  loadRecoveryRequests,
+  loadStoredItems,
+  RecoveryRequest,
+  saveStoredItems,
+} from "@/app/lib/item-storage";
 
 type ManagePostsClientProps = {
   role: "student" | "faculty" | "admin";
@@ -15,10 +23,13 @@ export default function ManagePostsClient({
   role,
   userName,
 }: ManagePostsClientProps) {
+  const [recoveryRequests] = useState<RecoveryRequest[]>(() =>
+    typeof window === "undefined" ? [] : loadRecoveryRequests(),
+  );
   const [items, setItems] = useState<Item[]>(() =>
     typeof window === "undefined"
       ? sampleItems
-      : [...sampleItems, ...loadStoredItems()],
+      : getActiveItems([...sampleItems, ...loadStoredItems()], recoveryRequests),
   );
 
   const openItems = useMemo(
@@ -101,12 +112,14 @@ export default function ManagePostsClient({
                     {item.category} - {item.location}
                   </p>
                 </div>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                  {item.status}
-                </span>
+                <StatusBadge status={item.status} />
               </div>
 
               <p className="mt-4 text-sm text-gray-700">{item.description}</p>
+              <FoundItemExpiration
+                item={item}
+                recoveryRequests={recoveryRequests}
+              />
 
               <div className="mt-5 flex flex-wrap gap-2">
                 <button

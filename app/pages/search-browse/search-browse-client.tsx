@@ -3,10 +3,17 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { useState } from "react";
+import FoundItemExpiration from "@/app/components/found-item-expiration";
 import ItemSearchFilter from "@/app/components/search-bar/item-search-filter";
 import Sidebar from "@/app/components/sidebar/page";
+import StatusBadge from "@/app/components/status-badge";
 import { Item, sampleItems } from "@/app/lib/items";
-import { loadStoredItems } from "@/app/lib/item-storage";
+import {
+  getActiveItems,
+  loadRecoveryRequests,
+  loadStoredItems,
+  RecoveryRequest,
+} from "@/app/lib/item-storage";
 
 type SearchBrowseClientProps = {
   role: "student" | "faculty" | "admin";
@@ -18,10 +25,13 @@ export default function SearchBrowseClient({
   userName,
 }: SearchBrowseClientProps) {
   const query = `role=${role}${userName ? `&user=${encodeURIComponent(userName)}` : ""}`;
+  const [recoveryRequests] = useState<RecoveryRequest[]>(() =>
+    typeof window === "undefined" ? [] : loadRecoveryRequests(),
+  );
   const [items] = useState<Item[]>(() =>
     typeof window === "undefined"
       ? sampleItems
-      : [...sampleItems, ...loadStoredItems()],
+      : getActiveItems([...sampleItems, ...loadStoredItems()], recoveryRequests),
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -66,7 +76,7 @@ export default function SearchBrowseClient({
             <div className="flex gap-2">
               <Link
                 href={`/pages/report-lost?${query}`}
-                className="rounded-md border border-green-200 bg-white px-4 py-2 text-sm font-medium text-green-700 hover:bg-green-50"
+                className="rounded-md border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
               >
                 Report lost
               </Link>
@@ -104,11 +114,18 @@ export default function SearchBrowseClient({
                     {item.category} - {item.location}
                   </p>
                 </div>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                  {item.status}
-                </span>
+                <StatusBadge status={item.status} />
               </div>
               <p className="mt-4 text-sm text-gray-700">{item.description}</p>
+              <FoundItemExpiration
+                item={item}
+                recoveryRequests={recoveryRequests}
+              />
+              {item.contactEmail && !item.isContactPrivate ? (
+                <p className="mt-3 text-sm text-gray-600">
+                  Contact email: {item.contactEmail}
+                </p>
+              ) : null}
               <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
                 <span>Posted by {item.postedBy}</span>
                 <span>{item.date}</span>

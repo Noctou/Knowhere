@@ -38,7 +38,7 @@ export default function Sidebar({ role = "student", userName }: SidebarProps) {
   ];
 
   return (
-    <aside className="flex h-screen w-64 flex-col bg-green-700 px-4 py-6 text-white">
+    <aside className="flex min-h-screen w-64 shrink-0 flex-col self-stretch bg-green-700 px-4 py-6 text-white">
       <div className="mb-8">
         <Image
           src="/logo.png"

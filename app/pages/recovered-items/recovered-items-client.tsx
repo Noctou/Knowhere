@@ -6,6 +6,7 @@ import { useState } from "react";
 import ItemSearchFilter from "@/app/components/search-bar/item-search-filter";
 import Sidebar from "@/app/components/sidebar/page";
 import {
+  claimStoredItem,
   loadRecoveryRequests,
   RecoveryRequest,
   saveRecoveryRequests,
@@ -51,8 +52,14 @@ export default function RecoveredItemsClient({
       const updatedRequests = currentRequests.map((request) =>
         request.id === id ? { ...request, status: "Approved" as const } : request,
       );
+      const approvedRequest = updatedRequests.find(
+        (request) => request.id === id,
+      );
 
       saveRecoveryRequests(updatedRequests);
+      if (approvedRequest) {
+        claimStoredItem(approvedRequest.itemId);
+      }
 
       return updatedRequests;
     });
