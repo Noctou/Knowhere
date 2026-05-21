@@ -13,22 +13,27 @@ export default function LoginPage() {
     event.preventDefault();
 
     const form = new FormData(event.currentTarget);
-    const username = String(form.get("username") || "").trim().toLowerCase();
+    const displayUsername = String(form.get("displayUsername") || "").trim();
+    const email = String(form.get("email") || "").trim().toLowerCase();
     const password = String(form.get("password") || "");
 
-    if (username === "admin") {
+    if (email === "admin") {
       if (password !== "123") {
         setLoginError("Invalid manager password.");
         return;
       }
 
       setLoginError("");
-      router.push("/pages/search-browse?role=admin&user=admin");
+      router.push(
+        `/pages/search-browse?role=admin&user=${encodeURIComponent(
+          displayUsername || "admin",
+        )}`,
+      );
       return;
     }
 
-    const isStudentEmail = username.endsWith("@student.fatima.edu.ph");
-    const isFacultyEmail = username.endsWith("@fatima.edu.ph");
+    const isStudentEmail = email.endsWith("@student.fatima.edu.ph");
+    const isFacultyEmail = email.endsWith("@fatima.edu.ph");
 
     if (!isStudentEmail && !isFacultyEmail) {
       setLoginError(
@@ -42,7 +47,7 @@ export default function LoginPage() {
 
     router.push(
       `/pages/search-browse?role=${role}&user=${encodeURIComponent(
-        username.split("@")[0] || "student",
+        displayUsername || email.split("@")[0] || "student",
       )}`,
     );
   }
@@ -63,13 +68,31 @@ export default function LoginPage() {
               htmlFor="username"
               className="block text-sm font-medium text-gray-700"
             >
-              Email or username
+              Username
             </label>
             <input
               id="username"
-              name="username"
+              name="displayUsername"
               type="text"
               autoComplete="username"
+              required
+              className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-400/10"
+              placeholder="Enter the name shown on your posts"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email or admin username
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="text"
+              autoComplete="email"
               required
               className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 outline-none transition focus:border-green-400 focus:ring-2 focus:ring-green-400/10"
               placeholder="you@student.fatima.edu.ph, you@fatima.edu.ph, or admin"
